@@ -1,68 +1,68 @@
 clear all;
 clc;
 
-%=============4™ Lista de Dinamica dos Fluidos Computacional=============%
+%=============4¬™ Lista de Dinamica dos Fluidos Computacional=============%
 
 % Aluna: Carolina Maria Nunes Bezerra
 
-% Algoritmo para resolver uma equaÁ„o de difus„o bidimensional em
-% coordenadas cartesianas, regime permamente, utilizando o mÈtodo A. Testar
-% o algoritmo utilizando a soluÁ„o manufaturada.
+% Algoritmo para resolver uma equa√ß√£o de difus√£o bidimensional em
+% coordenadas cartesianas, regime permamente, utilizando o m√©todo A. Testar
+% o algoritmo utilizando a solu√ß√£o manufaturada.
 
 %============================1 PRE-PROCESSAMENTO=========================%
 
 % 1.1-Dados do problema
 
-Lx=1;   % comprimento unit·rio em x
-Ly=1;   % comprimento unit·rio em y
+Lx=1;   % comprimento unit√°rio em x
+Ly=1;   % comprimento unit√°rio em y
 Nx=41;  % numero de pontos em x
 Ny=41;  % numero de pontos em y
 
-% CriaÁ„o da malha (M…TODO A)--------------------------------------------%
+% Cria√ß√£o da malha (M√âTODO A)--------------------------------------------%
 
 % Vetor coordenada dos pontos
 
 alpha=1;
-% Na direÁ„o x
+% Na dire√ß√£o x
 for i=1:Nx
     x_ponto(i)=Lx*((i-1)/(Nx-1))^alpha;
 end
-% Na direÁ„o y
+% Na dire√ß√£o y
 for j=1:Ny
     y_ponto(j)=Ly*((j-1)/(Ny-1))^alpha;
 end
 
 % vetor distancia entre os pontos
 
-% Na direÁ„o x
+% Na dire√ß√£o x
 for i=1:Nx-1 
     dist_p_x(i)=x_ponto(i+1)-x_ponto(i); 
 end
-% Na direÁ„o y
+% Na dire√ß√£o y
 for j=1:Ny-1 
     dist_p_y(j)=y_ponto(j+1)-y_ponto(j); 
 end
 
 % Vetor da coordenada das faces
 
-% Na direÁ„o x
+% Na dire√ß√£o x
 for i=1:Nx-1
     x_face(i)=(x_ponto(i)+x_ponto(i+1))/2;
 end
-% Na direÁ„o y
+% Na dire√ß√£o y
 for j=1:Ny-1
     y_face(j)=(y_ponto(j)+y_ponto(j+1))/2;
 end
 
 % Vetor distancia entre as faces (tamanho volume)
 
-% Na direÁ„o x
+% Na dire√ß√£o x
 dist_face_x(1)=x_face(1);
 for i=2:Nx-1
     dist_face_x(i)=x_face(i)-x_face(i-1);
 end
 dist_face_x(Nx)=x_ponto(Nx)-x_face(Nx-1);
-% Na direÁ„o y
+% Na dire√ß√£o y
 dist_face_y(1)=y_face(1);
 for j=2:Ny-1 
     dist_face_y(j)=y_face(j)-y_face(j-1);
@@ -71,8 +71,8 @@ dist_face_y(Ny)=y_ponto(Ny)-y_face(Ny-1);
 
 %==========================2 PROCESSAMENTO===============================%
 
-% Calculo da funÁ„o manufaturada |Phi| para o vetor [d] nas fronteiras 
-% (condiÁ„o dada)
+% Calculo da fun√ß√£o manufaturada |Phi| para o vetor [d] nas fronteiras 
+% (condi√ß√£o dada)
 
 for i=1:Nx
     for j=1:Ny
@@ -87,13 +87,13 @@ for i=1:Nx
         
     % Escolha para Sp ser nulo
         Sp(i,j)=0;
-    % Coeficientes de difus„o
+    % Coeficientes de difus√£o
         gamma_e(i)=1;
         gamma_w(i)=1;
         gamma_n(j)=1;
         gamma_s(j)=1;
         
-    % CondiÁ„o para os pontos do contorno (1,j), (i,1), (Nx,j), (i,Ny) 
+    % Condi√ß√£o para os pontos do contorno (1,j), (i,1), (Nx,j), (i,Ny) 
     if i==1||i==Nx||j==1||j==Ny
         ae(i,j)=0;    % leste
         aw(i,j)=0;    % oeste
@@ -110,7 +110,7 @@ for i=1:Nx
         f(i,j)=as(i,j);
         
     % Pontos internos 
-    % Fonte Sc a partir da soluÁ„o funÁ„o manufaturada 
+    % Fonte Sc a partir da solu√ß√£o fun√ß√£o manufaturada 
     else
 
         Sc(i,j)=-(12*x_ponto(i)^2*y_ponto(j)^5+20*x_ponto(i)^4*y_ponto(j)^3);          
@@ -133,21 +133,21 @@ for i=1:Nx
 end
 
 %========================================================================%
-%===========================TESTE DOS M…TODOS============================%
+%===========================TESTE DOS M√âTODOS============================%
 %========================================================================%
 
-tolerancia=10^-8;   % toler‚ncia como critÈrio para convergencia
+tolerancia=10^-8;   % toler√¢ncia como crit√©rio para convergencia
 
 %================PROCEDIMENTO ITERATIVO DE GAUSS SEIDEL==================%
 
-ResGS=1;            % ResÌduo de Guass Seidel(inicializaÁ„o)
-ItGS=0;             % iteraÁıes de Guass Seidel(inicializaÁ„o)
+ResGS=1;            % Res√≠duo de Guass Seidel(inicializa√ß√£o)
+ItGS=0;             % itera√ß√µes de Guass Seidel(inicializa√ß√£o)
 
-% Calculo para os valores iniciais da funÁ„o nos pontos
+% Calculo para os valores iniciais da fun√ß√£o nos pontos
 for i=1:Nx
     for j=1:Ny 
     % Para pontos da fronteira (1,j), (i,1), (Nx,j), (i,Ny) o valor de 
-    % PhiGS È a funÁ„o manufaturada Phi
+    % PhiGS √© a fun√ß√£o manufaturada Phi
         if i==1||i==Nx||j==1||j==Ny
            PhiGS(i,j)=Phi(i,j);
         else
@@ -157,7 +157,7 @@ for i=1:Nx
     
 end
 
-% IteraÁ„o usando o mÈtodo de Gauss Seidel
+% Itera√ß√£o usando o m√©todo de Gauss Seidel
 while ResGS>tolerancia
     
     for i=2:Nx-1
@@ -166,7 +166,7 @@ while ResGS>tolerancia
         end
     end
     
-% C·lculo do resÌduo
+% C√°lculo do res√≠duo
     for i=2:Nx-1
         for j=2:Ny-1
             RGS(i,j)=abs(a(i,j)*PhiGS(i,j)-(b(i,j)*PhiGS(i+1,j)+c(i,j)*PhiGS(i-1,j)+e(i,j)*PhiGS(i,j+1)+f(i,j)*PhiGS(i,j-1)+d(i,j)));
@@ -174,17 +174,17 @@ while ResGS>tolerancia
     end
     
  ItGS=ItGS+1
- % Maior valor da matriz dos resÌduos
+ % Maior valor da matriz dos res√≠duos
  ResGS=max(max(RGS))  
 end
 
 %========================TDMA LINHA POR LINHA===========================%
-% d(i,j) ser· o termo somando os coeficientes norte e sul mais o termo
+% d(i,j) ser√° o termo somando os coeficientes norte e sul mais o termo
 % fonte Ss manufaturado.
 for i=1:Nx
     for j=1:Ny 
     % Para pontos da fronteira (1,j), (i,1), (Nx,j), (i,Ny) o valor de 
-    % PhiT È a funÁ„o manufaturada Phi
+    % PhiT √© a fun√ß√£o manufaturada Phi
         if i==1||i==Nx||j==1||j==Ny
            PhiT(i,j)=Phi(i,j);
         else
@@ -194,19 +194,19 @@ for i=1:Nx
     
 end
 
-% IteraÁ„o usando o mÈtodo de TDMA Linha por Linha
-ResT=1;     % ResÌduo do TDMA (inicializaÁ„o)
-ItT=0;      % IteraÁıes do TDMA(inicializaÁ„o)
+% Itera√ß√£o usando o m√©todo de TDMA Linha por Linha
+ResT=1;     % Res√≠duo do TDMA (inicializa√ß√£o)
+ItT=0;      % Itera√ß√µes do TDMA(inicializa√ß√£o)
 
-% Como os coeficientes escolhidos para o b* foram o norte e sul, o TDMA ir·
+% Como os coeficientes escolhidos para o b* foram o norte e sul, o TDMA ir√°
 % caminhar coluna por coluna a partir dos [an] e [as] calculados anteriormente
-% e para cada coluna os valores na direÁ„o i ser„o calculados de uma vez
-% por iteraÁ„o.
-% Na primeira iteraÁ„o os valores de PhiT recebem os valores do loop fora 
-% do while, onde calculou-se a soluÁ„o PhiT a partir da funÁ„o manufaturada
+% e para cada coluna os valores na dire√ß√£o i ser√£o calculados de uma vez
+% por itera√ß√£o.
+% Na primeira itera√ß√£o os valores de PhiT recebem os valores do loop fora 
+% do while, onde calculou-se a solu√ß√£o PhiT a partir da fun√ß√£o manufaturada
 % no contorno e chutado o valor de zero nos pontos internos. A seguir,
-% esses valores ser„o atualizados com o TDMA atÈ atingir a convergencia
-% desejada para o resÌduo.
+% esses valores ser√£o atualizados com o TDMA at√© atingir a convergencia
+% desejada para o res√≠duo.
 
 while ResT>tolerancia 
     for j=2:Ny-1
@@ -227,7 +227,7 @@ while ResT>tolerancia
             PhiT(i,j)=P(i)*PhiT(i+1,j)+Q(i);
         end   
     end
-   % C·lculo do resÌduo 
+   % C√°lculo do res√≠duo 
     for i=2:Nx-1
         for j=2:Ny-1
             RT(i,j)=abs(a(i,j)*PhiT(i,j)-(b(i,j)*PhiT(i+1,j)+c(i,j)*PhiT(i-1,j)+e(i,j)*PhiT(i,j+1)+f(i,j)*PhiT(i,j-1)+d(i,j)));
@@ -235,22 +235,22 @@ while ResT>tolerancia
     end
     
 ItT=ItT+1
-% Maior valor da matriz dos resÌduos
+% Maior valor da matriz dos res√≠duos
 ResT=max(max(RT))
 end
 
 %=========================================================================%
-%=========COMPARA«√O DA SOLU«√O DOS M…TODOS COM A SOLU«√O EXATA===========%
+%=========COMPARA√á√ÉO DA SOLU√á√ÉO DOS M√âTODOS COM A SOLU√á√ÉO EXATA===========%
 %=========================================================================%
 
-% SoluÁ„o exata
+% Solu√ß√£o exata
 for i=1:Nx
     for j=1:Ny
         Phi_exata(i,j)=x_ponto(i)^4*y_ponto(j)^5;    
     end
 end
 
-% Erro m·ximo
+% Erro m√°ximo
 for i=1:Nx
     for j=1:Ny
         EGS(i,j)=abs(PhiGS(i,j)-Phi_exata(i,j));
@@ -260,37 +260,37 @@ end
 EGS_max=max(max(EGS));
 ET_max=max(max(ET));
 
-% Õndice da ordem para o erro de discretizaÁ„o
+% √çndice da ordem para o erro de discretiza√ß√£o
 i=3;
 IGS=EGS_max/(dist_face_x(i))^2; 
 IT=ET_max/(dist_face_x(i))^2;
 
-% SuperfÌcie da soluÁ„o exata
+% Superf√≠cie da solu√ß√£o exata
 figure (1)
 [ x , y ] = meshgrid( x_ponto , y_ponto) ;
 surf(x,y,Phi_exata) ;
 axis([0 1 0 1 0 max(max(Phi_exata))]);
-title('SuperfÌcie da soluÁ„o exata');
+title('Superf√≠cie da solu√ß√£o exata');
 xlabel('y');
 ylabel('x');
 zlabel('Phi_exata');
 
-% SuperfÌcie da soluÁ„o numÈrica de Guass Seidel
+% Superf√≠cie da solu√ß√£o num√©rica de Guass Seidel
 figure (2)
 [ x , y ] = meshgrid( x_ponto , y_ponto) ;
 surf(x,y,PhiGS) ;
 axis([0 1 0 1 0 max(max(PhiGS))]);
-title('SuperfÌcie da soluÁ„o numÈrica de Gauss Seidel');
+title('Superf√≠cie da solu√ß√£o num√©rica de Gauss Seidel');
 xlabel('y');
 ylabel('x');
 zlabel('PhiGS');
 
-% SuperfÌcie da soluÁ„o numÈrica do TDMA Linha por Linha
+% Superf√≠cie da solu√ß√£o num√©rica do TDMA Linha por Linha
 figure (3)
 [ x , y ] = meshgrid( x_ponto , y_ponto) ;
 surf(x,y,PhiT) ;
 axis([0 1 0 1 0 max(max(PhiT))]);
-title('SuperfÌcie da soluÁ„o numÈrica do TDMA Linha por Linha');
+title('Superf√≠cie da solu√ß√£o num√©rica do TDMA Linha por Linha');
 xlabel('y');
 ylabel('x');
 zlabel('PhiT');
