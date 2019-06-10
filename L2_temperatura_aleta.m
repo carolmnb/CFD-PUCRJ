@@ -1,24 +1,24 @@
-% 2º Trabalho de Dinamica dos Fluidos Computacional
-% Algoritmo para calculo da distribuição de temperaturas em uma aleta
-% finita de seção constante
+% 2Âº Trabalho de Dinamica dos Fluidos Computacional
+% Algoritmo para calculo da distribuiÃ§Ã£o de temperaturas em uma aleta
+% finita de seÃ§Ã£o constante
 
 % 1-PRE-PROCESSAMENTO------------------------------------------------------
 % 1.1-Dados do problema
-% 1.1.a-Parametros adimensionais (para considerar na discretização adimensionalizada):
-A_st1=1;            % area da seção transversal
+% 1.1.a-Parametros adimensionais (para considerar na discretizaÃ§Ã£o adimensionalizada):
+A_st1=1;            % area da seÃ§Ã£o transversal
 L1=1;               % comprimento da aleta
-k1=1;               % coefeciente de transferencia de calor por condução
-gamma1=1;           % coeficiente de difusão 
+k1=1;               % coefeciente de transferencia de calor por conduÃ§Ã£o
+gamma1=1;           % coeficiente de difusÃ£o 
 betaq1=3;           % coeficiente beta ao quadrado                             
-biot1=20;           % número de Biot
+biot1=20;           % nÃºmero de Biot
 tetab1=20;          % temperatura da base
 
-% 1.1.b-Parametros variados (para considerar na discretização dimensionalizada):
+% 1.1.b-Parametros variados (para considerar na discretizaÃ§Ã£o dimensionalizada):
 A_st2=1;                
 P2=1;                    
 L2=3/20;                 
-k2=1;                % coefeciente de transferencia de calor por condução
-h2=400/3;            % coeficiente de transferencia de calor por convecção
+k2=1;                % coefeciente de transferencia de calor por conduÃ§Ã£o
+h2=400/3;            % coeficiente de transferencia de calor por convecÃ§Ã£o
 betaq2=h2*P2*(L2^2)/(k2*A_st2);
 beta2=sqrt(betaq2);        
 biot2=h2*L2/k2; 
@@ -35,11 +35,11 @@ biot3=h3*L3/k3;
 tetab2=20;
 tetab3=20;
 tetainf=5;          % temperatura no infinito
-% 1.1.c-Volume de controle e número de pontos 
+% 1.1.c-Volume de controle e nÃºmero de pontos 
 nvc=10;             % numero de volumes de controle (10, 20 ou 40) 
 N=nvc+2;            % numero de pontos
 %-------------------------------------------------------------------------%
-% 1.2-Criação da malha
+% 1.2-CriaÃ§Ã£o da malha
 % 1.2.a-Vetor da coordenada das faces
 alpha=1; % coeficiente constante que depende da uniformidade da malha
 for i=1:N+1
@@ -105,7 +105,7 @@ end
 %-------------------------------------------------------------------------%
 % PROCESSAMENTO
 % 2-Calculo dos coeficientes 
-% 2.1-discretização adimensional
+% 2.1-discretizaÃ§Ã£o adimensional
 for i=1:N
        if i ==1
            a1(i)=1;
@@ -120,11 +120,11 @@ for i=1:N
        else
            d1(i)=0;
            b1(i)=0;
-           c1(i)=gamma1*A_st1/dist_p1(i-1); % condição no contorno
-           a1(i)=b1(i)+c1(i)+biot1;         % condição no contorno
+           c1(i)=gamma1*A_st1/dist_p1(i-1); % condiÃ§Ã£o no contorno
+           a1(i)=b1(i)+c1(i)+biot1;         % condiÃ§Ã£o no contorno
        end
    end
-% 2.2-discretização dimensional   
+% 2.2-discretizaÃ§Ã£o dimensional   
    for i=1:N
        if i ==1
            a2(i)=1;
@@ -139,8 +139,8 @@ for i=1:N
        else
            b2(i)=0;
            d2(i)=h2*A_st2*tetainf;
-           c2(i)=k2*A_st2/dist_p2(i-1); % condição no contorno
-           a2(i)=b2(i)+c2(i)+h2*A_st2;  % condição no contorno
+           c2(i)=k2*A_st2/dist_p2(i-1); % condiÃ§Ã£o no contorno
+           a2(i)=b2(i)+c2(i)+h2*A_st2;  % condiÃ§Ã£o no contorno
        end
    end
       for i=1:N
@@ -231,19 +231,19 @@ figure (1)
 hold on
 % perfil adimensional (L1) ao longo da aleta
 plot(x_ponto1/L1,Tadm1, 'g'), grid
-% distribuição de temperaturas adimensionais
+% distribuiÃ§Ã£o de temperaturas adimensionais
 plot(x_ponto1/L1,Tadm1, 'g'), grid
 plot(x_ponto2/L2,Tadm2, 'b-o'), grid
 plot(x_ponto3/L3,Tadm3, 'c*'), grid
 
 legend('L1=1','L2=0.15', 'L3=5')
-title ('Distribuição de temperatura adimensional')
+title ('DistribuiÃ§Ã£o de temperatura adimensional')
 xlabel ('Comprimento da aleta adimensional')
 ylabel ('Temperatura adimensional')
 
 %-------------------------------------------------------------------------%
 % 3-POS-PROCESSAMENTO
-% 3.1-Solução exata
+% 3.1-SoluÃ§Ã£o exata
 m=sqrt(h2*P2/(k2*A_st2));
 den2=cosh(m*L2)+(h2/(m*L2))*sinh(m*L2);
 den3=cosh(m*L3)+(h3/(m*L3))*sinh(m*L3);
@@ -262,7 +262,7 @@ hold on
 
 plot(x_ponto2/L2,erron2, 'b-o'), grid
 plot(x_ponto3/L3,erron3, 'c*'), grid
-title ('Distribuição dos erros normalizados')
+title ('DistribuiÃ§Ã£o dos erros normalizados')
 xlabel ('Comprimento da aleta adimensional')
 ylabel ('Erro normalizado')
 csvwrite('Erro normalizado2_10vc.csv',[(x_ponto2/L2), erron2]);
@@ -276,7 +276,7 @@ Mad3=M3*(L3/(k3*A_st3*tetab3));
 q_a2=Mad2*((sinh(m*L2)+(h2/(m*L2))*cosh(m*L2)))/(cosh(m*L2)+(h2/(m*L2))*sinh(m*L2));
 q_a3=Mad3*((sinh(m*L3)+(h3/(m*L3))*cosh(m*L3)))/(cosh(m*L3)+(h3/(m*L3))*sinh(m*L3));
 
-% 3.4-Balanço global
+% 3.4-BalanÃ§o global
 betaq=3;
 for i=1:N
     x_adm2(i)=(x_ponto2(i)/L2);
@@ -302,62 +302,4 @@ end
 Bal3=Jin3-Jout3+soma3;
 
 
-% %-------------------------------------------------------------------------%
-% 
-% % Exportação dos dados para o excel
-% 
-% % 10 volumes de controle
-% csvwrite('trabcf10volTadm1.csv',[(x_ponto1/L1)', Tadm1']); 
-% csvwrite('trabcf10volTadm2.csv',[(x_ponto2/L2)', Tadm2']); 
-% csvwrite('trabcf10volTadm3.csv',[(x_ponto3/L3)', Tadm3']); 
-% 
-% csvwrite('trabcf10volx_ponto1.csv',[x_ponto1]);
-% csvwrite('trabcf10volx_ponto2.csv',[x_ponto2]); 
-% csvwrite('trabcf10volx_ponto3.csv',[x_ponto3]);
-% 
-% csvwrite('trabcf10volx_ponto1adm.csv',[x_ponto1/L1]);
-% csvwrite('trabcf10volx_ponto2adm.csv',[x_ponto2/L2]); 
-% csvwrite('trabcf10volx_ponto3adm.csv',[x_ponto3/L3]); 
-% 
-% csvwrite('trabcf10Temperatura1.csv',[x1]);
-% csvwrite('trabcf10Temperatura2.csv',[x2]);
-% csvwrite('trabcf10Temperatura3.csv',[x3]);
-% 
-% csvwrite('trabcf10dist_face1.csv',[dist_face1]);
-% csvwrite('trabcf10dist_face2.csv',[dist_face2]);
-% csvwrite('trabcf10dist_face3.csv',[dist_face3]);
-% 
-% % % 20 volumes de controle
-% csvwrite('trabcf20volTadm1.csv',[(x_ponto1/L1)', Tadm1']); 
-% csvwrite('trabcf20volTadm2.csv',[(x_ponto2/L2)', Tadm2']); 
-% csvwrite('trabcf20volTadm3.csv',[(x_ponto3/L3)', Tadm3']); 
-% 
-% csvwrite('trabcf20volx_ponto1.csv',[x_ponto1]);
-% csvwrite('trabcf20volx_ponto2.csv',[x_ponto2]); 
-% csvwrite('trabcf20volx_ponto2.csv',[x_ponto3]); 
-% 
-% csvwrite('trabcf20Temperatura1.csv',[x1]);
-% csvwrite('trabcf20Temperatura2.csv',[x2]);
-% csvwrite('trabcf20Temperatura3.csv',[x3]);
-% 
-% csvwrite('trabcf20dist_face1.csv',[dist_face1]);
-% csvwrite('trabcf20dist_face2.csv',[dist_face2]);
-% csvwrite('trabcf20dist_face3.csv',[dist_face3]);
-% % 
-% % % 40 volumes de controle
-% csvwrite('trabcf40volTadm1.csv',[(x_ponto1/L1)', Tadm1']); 
-% csvwrite('trabcf40volTadm2.csv',[(x_ponto2/L2)', Tadm2']); 
-% csvwrite('trabcf40volTadm3.csv',[(x_ponto3/L3)', Tadm3']); 
-% 
-% csvwrite('trabcf40volx_ponto1.csv',[x_ponto1]);
-% csvwrite('trabcf40volx_ponto2.csv',[x_ponto2]); 
-% csvwrite('trabcf40volx_ponto2.csv',[x_ponto3]); 
-% 
-% csvwrite('trabcf40Temperatura1.csv',[x1]);
-% csvwrite('trabcf40Temperatura2.csv',[x2]);
-% csvwrite('trabcf40Temperatura3.csv',[x3]);
-% 
-% csvwrite('trabcf40dist_face1.csv',[dist_face1]);
-% csvwrite('trabcf40dist_face2.csv',[dist_face2]);
-% csvwrite('trabcf40dist_face3.csv',[dist_face3]);
 
